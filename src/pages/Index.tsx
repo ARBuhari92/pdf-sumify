@@ -25,6 +25,11 @@ const Index = () => {
       return;
     }
 
+    if (!import.meta.env.VITE_OPEN_API_KEY) {
+      toast.error("OpenAI API key not found in environment variables");
+      return;
+    }
+
     try {
       setIsGeneratingSummary(true);
       toast.info("Extracting text from PDF...");
