@@ -4,7 +4,8 @@ import { toast } from "sonner";
 import FileUpload from '@/components/FileUpload';
 import PDFViewer from '@/components/PDFViewer';
 import SummaryView from '@/components/SummaryView';
-import { extractTextFromPdf, summarizeText } from '@/services/PdfParser';
+import { extractTextFromPdf } from '@/services/PdfParser';
+import { generateSummaryWithOpenAI } from '@/services/OpenAiService';
 import { Button } from '@/components/ui/button';
 import { Search } from 'lucide-react';
 
@@ -24,20 +25,31 @@ const Index = () => {
       return;
     }
 
+    // Check if API key is available
+    const apiKey = localStorage.getItem('openai_api_key');
+    if (!apiKey) {
+      toast.error("Please set your OpenAI API key first");
+      return;
+    }
+
     try {
       setIsGeneratingSummary(true);
       toast.info("Extracting text from PDF...");
       
       const extractedText = await extractTextFromPdf(pdfFile);
       
-      toast.info("Generating summary...");
-      const generatedSummary = await summarizeText(extractedText);
+      toast.info("Generating summary with OpenAI...");
+      const generatedSummary = await generateSummaryWithOpenAI(extractedText);
       
       setSummary(generatedSummary);
       toast.success("Summary generated successfully!");
     } catch (error) {
       console.error('Error generating summary:', error);
-      toast.error("Failed to generate summary. Please try again.");
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("Failed to generate summary. Please try again.");
+      }
     } finally {
       setIsGeneratingSummary(false);
     }
@@ -49,7 +61,7 @@ const Index = () => {
         <header className="text-center mb-12">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">PDF-Sumify</h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Upload your PDF documents and get concise, accurate summaries in seconds.
+            Upload your PDF documents and get AI-powered summaries in seconds.
           </p>
         </header>
 
