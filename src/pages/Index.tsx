@@ -25,13 +25,6 @@ const Index = () => {
       return;
     }
 
-    // Check if API key is available
-    const apiKey = localStorage.getItem('openai_api_key');
-    if (!apiKey) {
-      toast.error("Please set your OpenAI API key first");
-      return;
-    }
-
     try {
       setIsGeneratingSummary(true);
       toast.info("Extracting text from PDF...");
