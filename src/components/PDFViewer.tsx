@@ -12,19 +12,6 @@ interface PDFViewerProps {
 const PDFViewer: React.FC<PDFViewerProps> = ({ file }) => {
   const [url, setUrl] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [showApiKeyInput, setShowApiKeyInput] = useState(false);
-  const [apiKey, setApiKey] = useState('');
-  
-  // Load API key from localStorage on component mount
-  useEffect(() => {
-    const savedApiKey = localStorage.getItem('openai_api_key');
-    if (savedApiKey) {
-      setApiKey(savedApiKey);
-    } else {
-      // If no API key is found, show the input
-      setShowApiKeyInput(true);
-    }
-  }, []);
   
   useEffect(() => {
     // Create a URL for the file
@@ -84,26 +71,7 @@ const PDFViewer: React.FC<PDFViewerProps> = ({ file }) => {
         </div>
       </div>
       
-      {showApiKeyInput && (
-        <div className="mb-4 p-3 border rounded-md bg-amber-50">
-          <h3 className="text-sm font-medium mb-2">OpenAI API Key Required</h3>
-          <p className="text-xs text-gray-600 mb-2">
-            Enter your OpenAI API key to generate summaries. Your key is stored only in your browser.
-          </p>
-          <div className="flex space-x-2">
-            <Input
-              type="password"
-              value={apiKey}
-              onChange={(e) => setApiKey(e.target.value)}
-              placeholder="sk-..."
-              className="text-xs"
-            />
-            <Button size="sm" onClick={saveApiKey}>
-              <Key className="h-3 w-3 mr-1" /> Save
-            </Button>
-          </div>
-        </div>
-      )}
+      
       
       <div className="border rounded-lg overflow-hidden bg-white shadow-sm">
         <iframe

@@ -1,4 +1,3 @@
-
 interface OpenAICompletionResponse {
   choices: {
     message: {
@@ -20,7 +19,7 @@ export async function generateSummaryWithOpenAI(text: string): Promise<string> {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('openai_api_key')}`
+        'Authorization': `Bearer ${import.meta.env.VITE_OPEN_API_KEY}`
       },
       body: JSON.stringify({
         model: 'gpt-3.5-turbo',
